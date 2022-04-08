@@ -111,6 +111,9 @@
 /* Define if your system supports event ports */
 #cmakedefine EVENT__HAVE_EVENT_PORTS 1
 
+/* Define to 1 if you have the `liburing' library. */
+#cmakedefine EVENT__HAVE_IO_URING 1
+
 /* Define to 1 if you have the `fcntl' function. */
 #cmakedefine EVENT__HAVE_FCNTL 1
 

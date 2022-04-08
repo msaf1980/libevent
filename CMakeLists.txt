@@ -575,6 +575,16 @@ if(WIN32 AND NOT CYGWIN)
     set(EVENT__HAVE_WEPOLL 1)
 endif()
 
+if ( CMAKE_SYSTEM_NAME STREQUAL Linux OR CMAKE_SYSTEM_NAME STREQUAL Android )
+    find_package(PkgConfig)
+    pkg_check_modules(LIBURING liburing)
+    if(LIBURING_FOUND)
+        set(EVENT__HAVE_IO_URING 1)
+    else()
+        unset(EVENT__HAVE_IO_URING)
+    endif()
+endif()
+
 # Get the gethostbyname_r prototype.
 if(EVENT__HAVE_GETHOSTBYNAME_R)
     CHECK_PROTOTYPE_DEFINITION(gethostbyname_r
@@ -898,6 +908,11 @@ endif()
 if(EVENT__HAVE_EVENT_PORTS)
     list(APPEND SRC_CORE evport.c)
 endif()
+
+if(EVENT__HAVE_IO_URING)
+    list(APPEND SRC_CORE uring.c)
+endif()
+
 
 if (NOT EVENT__DISABLE_OPENSSL)
     # only if OPENSSL_ROOT_DIR is not set yet
