@@ -152,6 +152,8 @@ main(int argc, char **argv)
 	const char *method = NULL;
 	struct event_config *cfg = NULL;
 
+	long duration, sum_duration = 0;
+
 #ifdef _WIN32
 	WSADATA WSAData;
 	WSAStartup(0x101, &WSAData);
@@ -227,9 +229,13 @@ main(int argc, char **argv)
 		tv = run_once();
 		if (tv == NULL)
 			exit(1);
-		fprintf(stdout, "%ld\n",
-			tv->tv_sec * 1000000L + tv->tv_usec);
+		duration = tv->tv_sec * 1000000L + tv->tv_usec;
+		sum_duration += duration;
+		fprintf(stdout, "%ld us (total %d, active %d)\n",
+			duration, num_pipes, num_active);
 	}
+	fprintf(stdout, "average %ld us (total %d, active %d)\n",
+			sum_duration/25, num_pipes, num_active);
 
 	exit(0);
 }

@@ -151,6 +151,8 @@ main(int argc, char **argv)
 	WSAStartup(0x101, &WSAData);
 #endif
 
+	long duration, sum_duration = 0;
+
 	while ((c = getopt(argc, argv, "n:")) != -1) {
 		switch (c) {
 		case 'n':
@@ -178,7 +180,11 @@ main(int argc, char **argv)
 			exit(1);
 		fprintf(stdout, "%ld\n",
 			tv->tv_sec * 1000000L + tv->tv_usec);
+		duration = tv->tv_sec * 1000000L + tv->tv_usec;
+		sum_duration += duration;
+		fprintf(stdout, "%ld us (total %d)\n", duration, num_pipes);
 	}
+	fprintf(stdout, "average %ld us (total %d)\n", sum_duration/25, num_pipes);
 
 #ifdef _WIN32
 	WSACleanup();
